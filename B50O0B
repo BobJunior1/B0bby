@@ -106,7 +106,7 @@ end
 
 local function setupImageLabel()
     local imageLabel = Instance.new("ImageLabel", screenGui)
-    imageLabel.Image = "rbxassetid://95060402744284"
+    imageLabel.Image = "rbxassetid://118072153845961"
     imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
     imageLabel.BackgroundTransparency = 1
     local initialDistance = Vector3.new(0, 0, 1000)
