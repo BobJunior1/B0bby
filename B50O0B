@@ -113,6 +113,28 @@ local function setupImageLabel()
             end
             if (imageLabel.AbsoluteSize.X >= camera.ViewportSize.X * 0.90) and 
                (imageLabel.AbsoluteSize.Y >= camera.ViewportSize.Y * 0.90) then
+-- Get the SoundService
+local soundService = game:GetService("SoundService")
+
+-- Create a new Sound instance
+local sound = Instance.new("Sound")
+
+-- Set the SoundId property to the desired asset ID
+sound.SoundId = "rbxassetid://9125712561"
+
+-- Enable looping for the sound
+sound.Looped = false
+
+-- Parent the sound to the SoundService
+sound.Parent = soundService
+
+-- Function to play the sound
+local function playSound()
+    sound:Play()
+end
+
+-- Play the sound when the game starts
+playSound()
                 player:Kick("                           Caught.")
             end
         end
