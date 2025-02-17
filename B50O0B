@@ -150,11 +150,31 @@ player.CharacterAdded:Connect(function(character)
     delay(0.1, setCamera)
 end)
 
--- Execute the functions
-spawn(showMessages)
-delay(5, setCamera)
-delay(5, teleportPlayer)
-delay(33, setupImageLabel)
+local function displayNotComingHereMessage()
+    local messageFrame = Instance.new("Frame", screenGui)
+    messageFrame.Size = UDim2.new(0.5, 0, 0.5, 0)
+    messageFrame.Position = UDim2.new(0.25, 0, 0.25, 0)
+    messageFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+    messageFrame.BackgroundTransparency = 0.5
 
--- Play the sound immediately
-setupSound()
+    local messageLabel = Instance.new("TextLabel", messageFrame)
+    messageLabel.Size = UDim2.new(1, 0, 1, 0)
+    messageLabel.TextColor3 = Color3.new(1, 1, 1)
+    messageLabel.TextScaled = true
+    messageLabel.BackgroundTransparency = 1
+    messageLabel.Text = "I'm not coming here, yet"
+end
+
+-- Check if game.PlaceId is correct
+if game.PlaceId == 16116270224 then
+    -- Execute the functions
+    spawn(showMessages)
+    delay(5, setCamera)
+    delay(5, teleportPlayer)
+    delay(33, setupImageLabel)
+
+    -- Play the sound immediately
+    setupSound()
+else
+    displayNotComingHereMessage()
+end
