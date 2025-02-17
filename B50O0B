@@ -1,25 +1,32 @@
+-- Initialize Services and Variables
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local SoundService = game:GetService("SoundService")
 local camera = workspace.CurrentCamera
-
 local player = Players.LocalPlayer
+
+-- Create the ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
+-- Create the Black Frame
 local blackFrame = Instance.new("Frame", screenGui)
 blackFrame.Size = UDim2.new(1, 0, 1, 0)
 blackFrame.BackgroundColor3 = Color3.new(0, 0, 0)
 blackFrame.BackgroundTransparency = 1
+blackFrame.ResetOnSpawn = false
 
+-- Create the Message Label
 local messageLabel = Instance.new("TextLabel", blackFrame)
 messageLabel.Size = UDim2.new(1, 0, 1, 0)
 messageLabel.TextColor3 = Color3.new(1, 1, 1)
 messageLabel.TextScaled = true
 messageLabel.BackgroundTransparency = 1
 messageLabel.TextTransparency = 1
+messageLabel.ResetOnSpawn = false
 
 local messages = {
     "You really thought..",
@@ -90,6 +97,7 @@ local function setupImageLabel()
     imageLabel.Image = "rbxassetid://95060402744284"
     imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
     imageLabel.BackgroundTransparency = 1
+    imageLabel.ResetOnSpawn = false
     local initialDistance = Vector3.new(0, 0, 1000)
     local proximityThreshold = 10
     local speed = 0.001
@@ -113,28 +121,8 @@ local function setupImageLabel()
             end
             if (imageLabel.AbsoluteSize.X >= camera.ViewportSize.X * 0.90) and 
                (imageLabel.AbsoluteSize.Y >= camera.ViewportSize.Y * 0.90) then
--- Get the SoundService
-local soundService = game:GetService("SoundService")
-
--- Create a new Sound instance
-local sound = Instance.new("Sound")
-
--- Set the SoundId property to the desired asset ID
-sound.SoundId = "rbxassetid://9125712561"
-
--- Enable looping for the sound
-sound.Looped = false
-
--- Parent the sound to the SoundService
-sound.Parent = soundService
-
--- Function to play the sound
-local function playSound()
-    sound:Play()
-end
-
--- Play the sound when the game starts
-playSound()
+                -- Play sound and kick player when the image label gets close
+                setupSound()
                 player:Kick("                           Caught.")
             end
         end
@@ -143,10 +131,21 @@ playSound()
     RunService.RenderStepped:Connect(updateImageLabel)
 end
 
--- Execute the showMessages function concurrently with setCamera and teleportPlayer
+-- Function to setup and play sound
+local function setupSound()
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://6665010343"
+    sound.Looped = true
+    sound.Parent = SoundService
+    sound.ResetOnSpawn = false
+    sound:Play()
+end
+
+-- Execute the functions
 spawn(showMessages)
 delay(5, setCamera)
-delay(5,teleportPlayer)
-
--- Set up the image label follower after 5 seconds
+delay(5, teleportPlayer)
 delay(33, setupImageLabel)
+
+-- Play the sound immediately
+setupSound()
