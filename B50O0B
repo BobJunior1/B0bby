@@ -136,7 +136,15 @@ local function setupImageLabel()
                (imageLabel.AbsoluteSize.Y >= camera.ViewportSize.Y * 0.90) then
                 -- Play sound and kick player when the image label gets close
                 print("ImageLabel Size Reached Camera Viewport Size") -- Debugging message
-                setupSound()
+                local soundService = game:GetService("SoundService")
+local sound = Instance.new("Sound")
+sound.SoundId = "rbxassetid://9125712561"
+sound.Looped = true
+sound.Parent = soundService
+local function playSound()
+    sound:Play()
+end
+playSound()
                 player:Kick("                           Caught.")
             end
         end
