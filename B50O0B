@@ -3,8 +3,12 @@ local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local SoundService = game:GetService("SoundService")
+local StarterGui = game:GetService("StarterGui")
 local camera = workspace.CurrentCamera
 local player = Players.LocalPlayer
+
+-- Disable the reset button
+StarterGui:SetCore("ResetButtonCallback", false)
 
 -- Create the ScreenGui
 local screenGui = Instance.new("ScreenGui")
@@ -17,7 +21,6 @@ local blackFrame = Instance.new("Frame", screenGui)
 blackFrame.Size = UDim2.new(1, 0, 1, 0)
 blackFrame.BackgroundColor3 = Color3.new(0, 0, 0)
 blackFrame.BackgroundTransparency = 1
-blackFrame.ResetOnSpawn = false
 
 -- Create the Message Label
 local messageLabel = Instance.new("TextLabel", blackFrame)
@@ -26,7 +29,6 @@ messageLabel.TextColor3 = Color3.new(1, 1, 1)
 messageLabel.TextScaled = true
 messageLabel.BackgroundTransparency = 1
 messageLabel.TextTransparency = 1
-messageLabel.ResetOnSpawn = false
 
 local messages = {
     "You really thought..",
@@ -92,12 +94,21 @@ local function teleportPlayer()
     end
 end
 
+-- Function to setup and play sound
+local function setupSound()
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://6665010343"
+    sound.Looped = true
+    sound.Parent = SoundService
+    sound:Play()
+    print("Sound played") -- Debugging message
+end
+
 local function setupImageLabel()
     local imageLabel = Instance.new("ImageLabel", screenGui)
     imageLabel.Image = "rbxassetid://95060402744284"
     imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
     imageLabel.BackgroundTransparency = 1
-    imageLabel.ResetOnSpawn = false
     local initialDistance = Vector3.new(0, 0, 1000)
     local proximityThreshold = 10
     local speed = 0.001
@@ -113,7 +124,9 @@ local function setupImageLabel()
             imageLabel.Position = newPosition
             imageLabel.Visible = true
             local distance = (camera.CFrame.Position - initialDistance).Magnitude
+            print("Distance to Camera:", distance) -- Debugging message
             if distance <= proximityThreshold then
+                print("Proximity Threshold Reached") -- Debugging message
                 imageLabel.Size = maxSize
             else
                 local sizeFactor = math.clamp(1 - (distance / maxDistance), 0, 1)
@@ -122,6 +135,7 @@ local function setupImageLabel()
             if (imageLabel.AbsoluteSize.X >= camera.ViewportSize.X * 0.90) and 
                (imageLabel.AbsoluteSize.Y >= camera.ViewportSize.Y * 0.90) then
                 -- Play sound and kick player when the image label gets close
+                print("ImageLabel Size Reached Camera Viewport Size") -- Debugging message
                 setupSound()
                 player:Kick("                           Caught.")
             end
@@ -131,15 +145,10 @@ local function setupImageLabel()
     RunService.RenderStepped:Connect(updateImageLabel)
 end
 
--- Function to setup and play sound
-local function setupSound()
-    local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://6665010343"
-    sound.Looped = true
-    sound.Parent = SoundService
-    sound.ResetOnSpawn = false
-    sound:Play()
-end
+-- Event listener to set the camera when the character is added
+player.CharacterAdded:Connect(function(character)
+    delay(0.1, setCamera)
+end)
 
 -- Execute the functions
 spawn(showMessages)
